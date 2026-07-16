@@ -1,0 +1,12 @@
+# configs/data/classes.yaml
+# ====================================
+# Single source of truth for class names and IDs across all vision datasets.
+# Any new dataset added to the vision branch must map its own labels
+# to these class names via a class_mapping section in its own config.
+
+classes:
+  0: yawning
+  1: eye_closure
+  2: smoking
+  3: phone_usage
+  4: seatbelt

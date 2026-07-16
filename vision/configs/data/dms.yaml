@@ -1,0 +1,19 @@
+dataset:
+  train_images: data/raw/DMS/train/images
+  train_labels: data/raw/DMS/train/labels
+  valid_images: data/raw/DMS/valid/images
+  valid_labels: data/raw/DMS/valid/labels
+  test_images: data/raw/DMS/test/images
+  test_labels: data/raw/DMS/test/labels
+
+  source_classes: [Open Eye, Closed Eye, Cigarette, Phone, Seatbelt]
+
+  class_mapping:
+    Open Eye: null
+    Closed Eye: eye_closure
+    Cigarette: smoking
+    Phone: phone_usage
+    Seatbelt: seatbelt
+
+preprocessing:
+  seed: 42

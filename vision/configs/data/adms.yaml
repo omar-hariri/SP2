@@ -1,0 +1,11 @@
+# configs/data/adms.yaml
+dataset:
+  train_images: data/raw/ADMS/Train/images
+  train_labels: data/raw/ADMS/Train/labels
+  test_images: data/raw/ADMS/Test/images
+  test_labels: data/raw/ADMS/Test/labels
+  classes: [yawning, eye_closure, smoking, phone_usage, seatbelt]
+
+preprocessing:
+  val_split: 0.15
+  seed: 42
