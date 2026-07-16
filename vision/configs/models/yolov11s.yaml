@@ -1,0 +1,45 @@
+# configs/models/yolov11s.yaml
+wandb:
+  project: SP2-vision
+  experiment_name: YOLOv11s
+  entity: omarhariri-syrian-private-university
+
+model:
+  name: "YOLOv11s"
+  weights: artifacts/weights/yolo11s.pt   # n=nano | s=small | m=medium
+  img_size: 640
+
+training:
+  epochs: 60
+  batch_size: 32
+  optimizer: AdamW
+  lr0: 0.001
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  patience: 10
+  workers: 4
+  save_period: 10
+
+reduce_lr:
+  enabled: true
+  monitor: val/mAP50-95
+  mode: max
+  factor: 0.5
+  patience: 5
+  min_lr: 0.000001
+  min_delta: 0.0001
+  cooldown: 1
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 5.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.1
+
+inference:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
