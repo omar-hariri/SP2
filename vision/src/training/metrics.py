@@ -2,13 +2,6 @@
 # ==================================================
 # Utilities for extracting validation and training metrics.
 
-METRIC_KEYS = [
-    "epoch",
-    "train/box_loss", "train/cls_loss", "train/dfl_loss",
-    "val/box_loss", "val/cls_loss", "val/dfl_loss",
-    "val/precision", "val/recall", "val/mAP50", "val/mAP50-95",
-]
-
 
 def extract_epoch_metrics(trainer) -> dict:
     loss = trainer.loss_items

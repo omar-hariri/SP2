@@ -25,6 +25,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset-dir", default=str(DEFAULT_DATASET_DIR))
     parser.add_argument("--runs-dir", default="artifacts/runs")
     parser.add_argument("--plots-dir", default="artifacts/plots")
+    parser.add_argument("--drive-runs-dir", default=None)
+    parser.add_argument("--drive-plots-dir", default=None)
+    parser.add_argument("--drive-registry-path", default=None)
+    parser.add_argument("--disable-drive-mirror", action="store_true")
     parser.add_argument("--data-yaml", default=None)
     return parser.parse_args()
 
@@ -49,8 +53,24 @@ def main():
         data_yaml_path = write_yolo_data_yaml(dataset_dir, classes_cfg, data_yaml_path)
     runs_dir = Path(args.runs_dir)
     plots_dir = Path(args.plots_dir)
+    drive_runs_dir = Path(args.drive_runs_dir) if args.drive_runs_dir else None
+    drive_plots_dir = Path(args.drive_plots_dir) if args.drive_plots_dir else None
+    drive_registry_path = Path(args.drive_registry_path) if args.drive_registry_path else None
+    mirror_to_drive = not args.disable_drive_mirror and any(
+        value is not None for value in (drive_runs_dir, drive_plots_dir, drive_registry_path)
+    )
 
-    best_weights = run_training(model_cfg, data_yaml_path, dataset_dir, runs_dir, plots_dir)
+    best_weights = run_training(
+        model_cfg,
+        data_yaml_path,
+        dataset_dir,
+        runs_dir,
+        plots_dir,
+        mirror_to_drive=mirror_to_drive,
+        drive_runs_dir=drive_runs_dir,
+        drive_plots_dir=drive_plots_dir,
+        drive_registry_path=drive_registry_path,
+    )
 
     log.info(f"Training complete. Best weights: {best_weights}")
 
