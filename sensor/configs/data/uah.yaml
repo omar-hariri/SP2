@@ -1,0 +1,15 @@
+  # configs/uah.yaml
+dataset:
+  root_dir: data/raw/UAH-DRIVESET-v1
+  drivers: [D1, D2, D3, D4, D5, D6]
+  target_states: [NORMAL, AGGRESSIVE, DROWSY]
+  label_map:
+    NORMAL: 0
+    DROWSY: 0
+    AGGRESSIVE: 1
+
+preprocessing:
+  target_hz: 10
+
+output:
+  save_dir: data/processed/UAH-DRIVESET-v1

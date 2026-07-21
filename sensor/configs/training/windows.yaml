@@ -1,0 +1,10 @@
+# configs/windows.yaml
+# ====================
+# Window configurations for time-series slicing.
+# Add/remove windows here to experiment with different sizes.
+# Run build_folds.py to pre-build any new windows.
+
+windows:
+  - { name: w3s, window_length: 30, stride: 20 }
+  - { name: w6s, window_length: 60, stride: 40 }
+  - { name: w10s, window_length: 100, stride: 60 }
