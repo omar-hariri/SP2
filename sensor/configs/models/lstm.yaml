@@ -1,26 +1,26 @@
-  # configs/lstm.yaml
 wandb:
   project: SP2
   experiment_name: LSTM_LODO_CV
   entity: omarhariri-syrian-private-university
-  
-  model:
-    name: "LSTM"
-    lstm_units_1: 64
-    lstm_units_2: 32
-    dense_units: 32
-    dropout: 0.3
-    recurrent_dropout: 0.0
-    weight_decay: 0.001
-    l1: 0.00001
-    l2: 0.01
-  training:
-    batch_size: 32
-    epochs: 50
-    learning_rate: 0.0001
-    monitor: "val_loss"
-    early_stopping_patience: 8
-    reduction_patience: 7
 
-  data:
-    classes: ["NON_AGGRESSIVE", "AGGRESSIVE"]
+model:
+  name: "LSTM"
+  lstm_units_1: 64
+  lstm_units_2: 32
+  dense_units: 32
+  dropout: 0.3
+  recurrent_dropout: 0.0
+  weight_decay: 0.001
+  l1: 0.00001
+  l2: 0.01
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.0001
+  monitor: "val_loss"
+  early_stopping_patience: 8
+  reduction_patience: 7
+
+data:
+  classes: ["NON_AGGRESSIVE", "AGGRESSIVE"]
