@@ -133,18 +133,6 @@ def run(config: dict):
             models_dir = Path("artifacts/models/lstm")
             models_dir.mkdir(parents=True, exist_ok=True)
             model.save(models_dir / f"model_{window_name}_fold{fold_num}.keras")
-            # Save model onnx
-            import tf2onnx
-            onnx_path = models_dir / f"model_{window_name}_fold{fold_num}.onnx"
-            input_names = [inp.name.split(':')[0] for inp in model.inputs]
-            output_names = [out.name.split(':')[0] for out in model.outputs]
-            tf2onnx.convert.from_keras(
-                model,
-                output_path=str(onnx_path),
-                input_names=input_names,
-                output_names=output_names
-)
-            print(f"  Exported ONNX -> {onnx_path}")
 
             print(f"Done.  Acc: {metrics['acc']:.4f}  F1: {metrics['f1']:.4f}")
             # Finish this fold's run
