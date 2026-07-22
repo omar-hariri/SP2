@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional, Union
 
 from src.models.yolo import load_yolo_model
-from src.training.artifact_mirroring import mirror_run_artifacts
+from src.training.artifact_mirroring import mirror_last_checkpoint, mirror_run_artifacts
 from src.training.callbacks import build_batch_loss_accumulator, build_epoch_end_callback, build_history, build_reduce_lr_callback
 from src.training.checkpointing import best_and_last_weights, mark_run_complete, resolve_resume_checkpoint
 from src.training.export import export_training_weights, export_yolo_model as _export_yolo_model
@@ -61,6 +61,15 @@ def train_yolo_model(
 
     model.add_callback("on_batch_end", on_batch_end)
     model.add_callback("on_fit_epoch_end", on_fit_epoch_end)
+
+    if drive_root is not None:
+        drive_root = Path(drive_root)
+        drive_runs_dir = drive_root / "runs"
+
+        def on_drive_epoch_end(trainer):
+            mirror_last_checkpoint(Path(trainer.save_dir), drive_runs_dir)
+
+        model.add_callback("on_fit_epoch_end", on_drive_epoch_end)
 
     results = model.train(
         **build_training_args(

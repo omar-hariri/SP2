@@ -24,6 +24,19 @@ def mirror_directory(source_dir: Path, target_dir: Path):
     return target_dir
 
 
+def mirror_last_checkpoint(source_run_dir: Path, mirror_runs_dir: Path):
+    source_run_dir = Path(source_run_dir)
+    mirror_runs_dir = Path(mirror_runs_dir)
+    source_weights = source_run_dir / "weights" / "last.pt"
+    if not source_weights.exists():
+        return None
+
+    target_dir = mirror_runs_dir / source_run_dir.name / "weights"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    copy2(source_weights, target_dir / "last.pt")
+    return target_dir / "last.pt"
+
+
 def mirror_run_artifacts(
     source_run_dir: Path,
     mirror_runs_dir: Path | None = None,
