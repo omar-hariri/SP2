@@ -29,8 +29,15 @@ def build_batch_loss_accumulator():
 
     def on_batch_end(trainer):
         loss_items = trainer.loss_items
-        if loss_items is not None:
-            losses.append([float(v) for v in loss_items])
+        if loss_items is None:
+            return
+        try:
+            vals = [float(v) for v in loss_items]
+        except (ValueError, TypeError):
+            return
+        if len(vals) < 3:
+            return
+        losses.append(vals[:3])
 
     def flush() -> list[float] | None:
         if not losses:
