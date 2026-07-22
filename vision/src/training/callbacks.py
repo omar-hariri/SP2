@@ -32,7 +32,10 @@ def build_batch_loss_accumulator():
         if loss_items is None:
             return
         try:
-            vals = [float(v) for v in loss_items]
+            if isinstance(loss_items, dict):
+                vals = [float(loss_items.get(k, 0)) for k in ("box_loss", "cls_loss", "dfl_loss")]
+            else:
+                vals = [float(v) for v in loss_items]
         except (ValueError, TypeError):
             return
         if len(vals) < 3:

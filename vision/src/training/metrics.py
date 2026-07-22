@@ -3,15 +3,26 @@
 # Utilities for extracting validation and training metrics.
 
 
+def _get_loss(loss, index: int, key: str) -> float:
+    if loss is None:
+        return 0.0
+    if isinstance(loss, dict):
+        return float(loss.get(key, 0))
+    try:
+        return float(loss[index]) if len(loss) > index else 0.0
+    except (IndexError, KeyError, TypeError):
+        return 0.0
+
+
 def extract_epoch_metrics(trainer) -> dict:
     loss = trainer.loss_items
     metrics = trainer.metrics or {}
 
     return {
         "epoch": trainer.epoch + 1,
-        "train/box_loss": float(loss[0]) if loss is not None and len(loss) > 0 else 0.0,
-        "train/cls_loss": float(loss[1]) if loss is not None and len(loss) > 1 else 0.0,
-        "train/dfl_loss": float(loss[2]) if loss is not None and len(loss) > 2 else 0.0,
+        "train/box_loss": _get_loss(loss, 0, "box_loss"),
+        "train/cls_loss": _get_loss(loss, 1, "cls_loss"),
+        "train/dfl_loss": _get_loss(loss, 2, "dfl_loss"),
         "val/box_loss": float(metrics.get("val/box_loss", 0)),
         "val/cls_loss": float(metrics.get("val/cls_loss", 0)),
         "val/dfl_loss": float(metrics.get("val/dfl_loss", 0)),
