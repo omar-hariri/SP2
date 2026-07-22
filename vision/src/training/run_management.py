@@ -58,7 +58,9 @@ WANDB_ID_FILE = ".wandb_run_id"
 
 
 def save_wandb_run_id(run_dir: Path, run_id: str):
-    (Path(run_dir) / WANDB_ID_FILE).write_text(run_id.strip(), encoding="utf-8")
+    path = Path(run_dir) / WANDB_ID_FILE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(run_id.strip(), encoding="utf-8")
 
 
 def load_wandb_run_id(run_dir: Path) -> str | None:
