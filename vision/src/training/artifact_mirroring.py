@@ -24,29 +24,6 @@ def mirror_directory(source_dir: Path, target_dir: Path):
     return target_dir
 
 
-def mirror_epoch_checkpoint(source_run_dir: Path, mirror_runs_dir: Path | None, epoch: int):
-    if mirror_runs_dir is None:
-        return None
-
-    source_run_dir = Path(source_run_dir)
-    mirror_runs_dir = Path(mirror_runs_dir)
-    source_weights = source_run_dir / "weights" / "last.pt"
-    if not source_weights.exists():
-        return None
-
-    target_run_dir = mirror_runs_dir / source_run_dir.name
-    target_weights_dir = target_run_dir / "weights"
-    target_weights_dir.mkdir(parents=True, exist_ok=True)
-
-    copy2(source_weights, target_weights_dir / "last.pt")
-
-    target_epoch_dir = target_weights_dir / "epochs"
-    target_epoch_dir.mkdir(parents=True, exist_ok=True)
-    target_checkpoint = target_epoch_dir / f"epoch_{epoch:04d}.pt"
-    copy2(source_weights, target_checkpoint)
-    return target_checkpoint
-
-
 def mirror_run_artifacts(
     source_run_dir: Path,
     mirror_runs_dir: Path | None = None,

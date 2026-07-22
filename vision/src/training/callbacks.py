@@ -24,6 +24,25 @@ def build_history() -> dict:
     }
 
 
+def build_batch_loss_accumulator():
+    losses = []
+
+    def on_batch_end(trainer):
+        loss_items = trainer.loss_items
+        if loss_items is not None:
+            losses.append([float(v) for v in loss_items])
+
+    def flush() -> list[float] | None:
+        if not losses:
+            return None
+        n = len(losses)
+        avg = [sum(vals[i] for vals in losses) / n for i in range(len(losses[0]))]
+        losses.clear()
+        return avg
+
+    return on_batch_end, flush
+
+
 def build_reduce_lr_callback(config: dict):
     cfg = config.get("reduce_lr", {})
     if not cfg.get("enabled", False):
@@ -106,10 +125,14 @@ def build_reduce_lr_callback(config: dict):
 def build_epoch_end_callback(
     history: MutableMapping[str, list],
     total_epochs: int,
+    loss_flush: Callable,
     reduce_lr_callback: Optional[Callable] = None,
-    checkpoint_callback: Optional[Callable] = None,
 ):
     def on_fit_epoch_end(trainer):
+        avg_loss = loss_flush()
+        if avg_loss is not None:
+            trainer.loss_items = avg_loss
+
         epoch_metrics = extract_epoch_metrics(trainer)
 
         for key in history:
@@ -118,9 +141,6 @@ def build_epoch_end_callback(
 
         if reduce_lr_callback:
             reduce_lr_callback(trainer, epoch_metrics)
-
-        if checkpoint_callback:
-            checkpoint_callback(trainer, epoch_metrics)
 
         log_epoch_metrics(epoch_metrics)
         print_epoch_summary(epoch_metrics, total_epochs)

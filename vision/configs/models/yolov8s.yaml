@@ -1,6 +1,6 @@
 # configs/models/yolov8s.yaml
 wandb:
-  project: SP2-vision
+  project: SP2-vision-2
   experiment_name: YOLOv8s
   entity: omarhariri-syrian-private-university
 
@@ -17,7 +17,7 @@ training:
   lrf: 0.01
   momentum: 0.937
   weight_decay: 0.0005
-  patience: 10
+  patience: 4
   workers: 4
   save_period: 10
 

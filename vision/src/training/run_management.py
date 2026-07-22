@@ -54,6 +54,20 @@ def prepare_run(config: dict, model_type: str, runs_dir: Path) -> dict:
     }
 
 
+WANDB_ID_FILE = ".wandb_run_id"
+
+
+def save_wandb_run_id(run_dir: Path, run_id: str):
+    (Path(run_dir) / WANDB_ID_FILE).write_text(run_id.strip(), encoding="utf-8")
+
+
+def load_wandb_run_id(run_dir: Path) -> str | None:
+    path = Path(run_dir) / WANDB_ID_FILE
+    if path.exists():
+        return path.read_text(encoding="utf-8").strip()
+    return None
+
+
 def mark_run_complete(run_dir: Path) -> Path:
     run_dir = Path(run_dir)
     run_dir.mkdir(parents=True, exist_ok=True)

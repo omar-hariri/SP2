@@ -23,7 +23,8 @@ def _load_wandb() -> Optional[Any]:
     return _wandb
 
 
-def init_wandb(cfg: dict, run_name: str, n_train: int, n_val: int, n_test: int):
+def init_wandb(cfg: dict, run_name: str, n_train: int, n_val: int, n_test: int,
+               resume: bool = False, run_id: Optional[str] = None):
     global _wandb_run
     wcfg = cfg.get("wandb", {})
     if not wcfg or not wcfg.get("enabled", True):
@@ -36,7 +37,7 @@ def init_wandb(cfg: dict, run_name: str, n_train: int, n_val: int, n_test: int):
 
     model_cfg = cfg.get("model", {})
     training_cfg = cfg.get("training", {})
-    run = wandb.init(
+    kwargs = dict(
         project=wcfg["project"],
         entity=wcfg.get("entity"),
         name=run_name,
@@ -50,8 +51,15 @@ def init_wandb(cfg: dict, run_name: str, n_train: int, n_val: int, n_test: int):
         },
         tags=wcfg.get("tags", ["vision", "driver-monitoring"]),
     )
+    if resume and run_id:
+        kwargs["resume"] = "allow"
+        kwargs["id"] = run_id
+
+    run = wandb.init(**kwargs)
     _wandb_run = run
     log.info(f"WandB run initialized -> {run.url}")
+    if resume:
+        log.info(f"WandB resumed run id=%s", run_id)
     return run
 
 
